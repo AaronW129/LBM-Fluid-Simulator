@@ -7,7 +7,7 @@ from matplotlib.widgets import Slider
 
 def main():
     # --- 0. INITIALIZATIONS ---
-    tick = 2
+    tick = 10
     grid_x, grid_y = 300, 100 # size of lattice
     tau = 0.8 # collision time
     end_tick = 10000 # how many ticks before simulation ends     
@@ -38,7 +38,7 @@ def main():
 
     # -- FLOW
     # Initial flow (polar coordinates)
-    r_in = 0.1
+    r_in = 0.12
     theta_in = 0
 
     # Flow vector to be mapped on each of lattice's cells
@@ -291,10 +291,14 @@ def main():
             for i in range(9):
                 fluid_grid[:, :, i] = np.roll(np.roll(fluid_grid[:, :, i], e[i, 0], axis=1), e[i, 1], axis=0)
 
-            # Zou-He boundaries on all walls
+            # Zou-He boundaries on left and right walls
             fluid_grid[:, -1, :] = fluid_grid[:, -2, :]
             fluid_grid[:, 0, :] = fluid_grid[:, 1, :]
             
+            # Bounce-back (ceiling and floor)
+            fluid_grid[0, :, [2, 5, 8]] = fluid_grid[0, :, [6, 3, 0]]
+            fluid_grid[-1, :, [6, 3, 0]] = fluid_grid[-1, :, [2, 5, 8]]
+
             # Bounce-back on obstacle
             f_post = fluid_grid.copy()
             for i in range(9):

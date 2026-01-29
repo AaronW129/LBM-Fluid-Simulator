@@ -9,10 +9,10 @@ def main():
     # --- 0. INITIALIZATIONS ---
     tick = 2
     grid_x, grid_y = 300, 100 # size of lattice
-    tau = 0.6 # collision time
-    end_tick = 4000 # how many ticks before simulation ends     
+    tau = 0.8 # collision time
+    end_tick = 10000 # how many ticks before simulation ends     
     weight_count = 9 
-    txt_naca = {"value":"0012"} # explicitely make the NACA code mutable
+    txt_naca = {"value":"2412"} # explicitely make the NACA code mutable
 
     # -- WEIGHTS
     # Direction of weight per cell
@@ -38,7 +38,7 @@ def main():
 
     # -- FLOW
     # Initial flow (polar coordinates)
-    r_in = 0.12
+    r_in = 0.1
     theta_in = 0
 
     # Flow vector to be mapped on each of lattice's cells
@@ -125,7 +125,7 @@ def main():
     # vertical wall at center x with a small vertical hole
     def make_wall_with_gap(center: tuple) -> np.ndarray:
         x0, y0 = center
-        half_thick = 1  
+        half_thick = 3
         gap = grid_y / 4
         band = (X >= x0 - half_thick) & (X <= x0 + half_thick)
         slit = (np.abs(Y - y0) <= gap / 2)
@@ -178,15 +178,18 @@ def main():
         y_lower = (yc - yt * np.cos(theta)) * chord
 
         # Map onto lattice
-        y_local = Y - cy
+        y_local = cy - Y
         foil = inside & (y_local <= y_upper) & (y_local >= y_lower)
         return foil
 
     # generates the corresponding obstacle with appropriate rotation
-    def generate_obstacle():
+    def generate_obstacle() -> np.ndarray:
         name = obstacle_type["name"]
         center = obstacle_type["center"]
         angle = obstacle_type["angle"]
+
+        obstacle[0, :] = True
+        obstacle[-1, :] = True
 
         if name == "circle":
             base = make_circle(center)
@@ -199,9 +202,9 @@ def main():
         else:
             base = np.zeros_like(obstacle, dtype=bool)
 
-        return rotate_mask(base, center, angle)
+        return rotate_mask(base, center, angle) 
 
-    # Create obstacle
+    # Create obstacle and walls
     obstacle[:] = generate_obstacle()
 
     # --- GRAPH PARAMETERS ---
@@ -211,7 +214,6 @@ def main():
     im = ax.imshow(np.zeros((grid_y, grid_x)), cmap="viridis", origin="upper", interpolation="nearest", vmin = 0.0, vmax = 0.40)
     plt.colorbar(im, pad=0.04, label="|u| (fluid speed)")
     title = ax.set_title("LBM wind-tunnel, tick=0")
-
 
     # --- BUTTONS ---
     # Padding
@@ -289,10 +291,10 @@ def main():
             for i in range(9):
                 fluid_grid[:, :, i] = np.roll(np.roll(fluid_grid[:, :, i], e[i, 0], axis=1), e[i, 1], axis=0)
 
-            # Zou-He boundaries on the left and right walls
+            # Zou-He boundaries on all walls
             fluid_grid[:, -1, :] = fluid_grid[:, -2, :]
             fluid_grid[:, 0, :] = fluid_grid[:, 1, :]
-
+            
             # Bounce-back on obstacle
             f_post = fluid_grid.copy()
             for i in range(9):

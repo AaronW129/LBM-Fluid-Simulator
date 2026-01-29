@@ -1,6 +1,3 @@
-<img width="1000" height="500" alt="airfoil_1" src="https://github.com/user-attachments/assets/7513ab20-8c3f-433b-8523-73aa8114e009" />
-<img width="1000" height="500" alt="wallgap" src="https://github.com/user-attachments/assets/358d1f1a-63f0-43f6-af47-5930159da10a" />
-
 # Explanation
 
 This project is a fluid simulator that uses the Lattice Boltzman Method (LBM), to simulate fluid flow. Typically, the making of a fluid simulator requires the user to solve for the Navier-Stokes equation which is a set of partial differential equations that describe how a fluid evolves over time. This can not only complicate software, but also burden the machine in constantly computing these partial differential equations if implemented incorrectly.
@@ -19,6 +16,10 @@ As for the construction of obstacles with continuous representation, like the sp
 
 For animating the simulation, we render each frame after the time reaches an even number, which is a tick. In which, the process above takes place via code and the next frame is prepared after clearing the previous frame / lattice.
 
+<img width="1000" height="500" alt="windtunnel" src="https://github.com/user-attachments/assets/a82b8398-26c1-44d4-b047-f9c47afbfb75" />
+<img width="1000" height="500" alt="airfoil_2" src="https://github.com/user-attachments/assets/126ea71f-9a9c-4144-b176-bddc37edbba1" />
+
+
 # Credits:
 Thanks to the following sources for the theory behind the code!
 
@@ -34,3 +35,4 @@ https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf
 
 https://en.wikipedia.org/wiki/NACA_airfoil
 - An explanation of the naming of air foils and the algebraic expressions of their shapes.
+

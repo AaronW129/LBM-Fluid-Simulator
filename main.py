@@ -10,7 +10,7 @@ def main():
     tick = 10
     grid_x, grid_y = 300, 100 # size of lattice
     tau = 0.8 # collision time
-    end_tick = 10000 # how many ticks before simulation ends     
+    end_tick = 100000 # how many ticks before simulation ends     
     weight_count = 9 
     txt_naca = {"value":"2412"} # explicitely make the NACA code mutable
 
